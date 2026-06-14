@@ -1,0 +1,181 @@
+{% comment %} sections/toolhaus-product.liquid {% endcomment %}
+{%- style -%}
+  #th-product-{{ section.id }} { background: #1D3A2A; color: #F5F3EE; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; padding: 60px 40px 100px; }
+  #th-product-{{ section.id }} * { box-sizing: border-box; }
+  #th-product-{{ section.id }} .th-wrap { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1.1fr 1fr; gap: 64px; }
+  #th-product-{{ section.id }} .th-gallery { position: sticky; top: 110px; align-self: start; }
+  #th-product-{{ section.id }} .th-main { aspect-ratio: 1/1; background: #0f2018; border-radius: 14px; overflow: hidden; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; }
+  #th-product-{{ section.id }} .th-main img { width: 100%; height: 100%; object-fit: cover; }
+  #th-product-{{ section.id }} .th-thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  #th-product-{{ section.id }} .th-thumb { aspect-ratio: 1/1; background: #0f2018; border-radius: 8px; overflow: hidden; cursor: pointer; border: 2px solid transparent; transition: border-color 0.2s; }
+  #th-product-{{ section.id }} .th-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  #th-product-{{ section.id }} .th-thumb.th-active, #th-product-{{ section.id }} .th-thumb:hover { border-color: #7EC88A; }
+  #th-product-{{ section.id }} .th-placeholder { color: #7EC88A; display: flex; flex-direction: column; align-items: center; gap: 12px; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; }
+  #th-product-{{ section.id }} .th-type { font-size: 12px; letter-spacing: 2.5px; text-transform: uppercase; color: #7EC88A; font-weight: 700; margin-bottom: 14px; }
+  #th-product-{{ section.id }} .th-title { font-size: clamp(32px, 4vw, 48px); font-weight: 900; letter-spacing: -1px; margin: 0 0 16px; line-height: 1.05; }
+  #th-product-{{ section.id }} .th-price { font-size: 28px; font-weight: 700; color: #7EC88A; margin: 0 0 24px; }
+  #th-product-{{ section.id }} .th-short { color: #E8E4DA; font-size: 16px; line-height: 1.7; margin: 0 0 28px; }
+  #th-product-{{ section.id }} .th-badges { display: flex; gap: 16px; flex-wrap: wrap; padding: 20px 0; border-top: 1px solid rgba(126,200,138,0.15); border-bottom: 1px solid rgba(126,200,138,0.15); margin-bottom: 28px; }
+  #th-product-{{ section.id }} .th-badge { display: inline-flex; align-items: center; gap: 8px; color: #7EC88A; font-size: 13px; font-weight: 600; }
+  #th-product-{{ section.id }} .th-atc { display: block; width: 100%; background: #7EC88A; color: #1D3A2A; border: 0; padding: 18px; border-radius: 10px; font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 1.5px; cursor: pointer; transition: transform 0.25s, box-shadow 0.25s; }
+  #th-product-{{ section.id }} .th-atc:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(126,200,138,0.3); }
+  #th-product-{{ section.id }} .th-atc:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+  #th-product-{{ section.id }} .th-desc { margin-top: 80px; max-width: 1280px; margin-left: auto; margin-right: auto; padding-top: 40px; border-top: 1px solid rgba(126,200,138,0.12); }
+  #th-product-{{ section.id }} .th-desc summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; padding: 18px 0; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; color: #7EC88A; font-weight: 700; }
+  #th-product-{{ section.id }} .th-desc summary::-webkit-details-marker { display: none; }
+  #th-product-{{ section.id }} .th-desc .th-body { color: #E8E4DA; font-size: 15px; line-height: 1.8; padding-bottom: 24px; }
+  #th-product-{{ section.id }} .th-related { max-width: 1280px; margin: 60px auto 0; }
+  #th-product-{{ section.id }} .th-related h3 { font-size: 13px; letter-spacing: 2.5px; text-transform: uppercase; color: #7EC88A; margin: 0 0 24px; font-weight: 700; }
+  #th-product-{{ section.id }} .th-rel-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  #th-product-{{ section.id }} .th-rel { background: #2F5E42; border-radius: 12px; overflow: hidden; text-decoration: none; color: inherit; transition: transform 0.3s, box-shadow 0.3s; }
+  #th-product-{{ section.id }} .th-rel:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgba(126,200,138,0.15); }
+  #th-product-{{ section.id }} .th-rel-img { aspect-ratio: 4/5; background: #0f2018; overflow: hidden; }
+  #th-product-{{ section.id }} .th-rel-img img { width:100%;height:100%;object-fit:cover; }
+  #th-product-{{ section.id }} .th-rel-info { padding: 18px; }
+  #th-product-{{ section.id }} .th-rel-type { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #7EC88A; font-weight: 700; margin-bottom: 6px; }
+  #th-product-{{ section.id }} .th-rel-title { font-weight: 700; font-size: 15px; margin: 0 0 8px; }
+  #th-product-{{ section.id }} .th-rel-price { color: #E8E4DA; font-size: 14px; }
+  @media (max-width: 900px) {
+    #th-product-{{ section.id }} { padding: 40px 20px 60px; }
+    #th-product-{{ section.id }} .th-wrap { grid-template-columns: 1fr; gap: 36px; }
+    #th-product-{{ section.id }} .th-gallery { position: static; }
+    #th-product-{{ section.id }} .th-rel-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 560px) {
+    #th-product-{{ section.id }} .th-rel-grid { grid-template-columns: 1fr; }
+  }
+{%- endstyle -%}
+
+<div id="th-product-{{ section.id }}">
+  <div class="th-wrap">
+    <div class="th-gallery">
+      <div class="th-main" data-th-main>
+        {% if product.featured_image %}
+          <img src="{{ product.featured_image | image_url: width: 1200 }}" alt="{{ product.featured_image.alt | escape }}" id="th-main-img-{{ section.id }}">
+        {% else %}
+          <div class="th-placeholder">
+            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            <span>{{ section.settings.empty_image_label }}</span>
+          </div>
+        {% endif %}
+      </div>
+      {% if product.images.size > 0 %}
+        <div class="th-thumbs">
+          {% for img in product.images limit: 4 %}
+            <button class="th-thumb {% if forloop.first %}th-active{% endif %}" data-th-thumb data-src="{{ img | image_url: width: 1200 }}" data-alt="{{ img.alt | escape }}" aria-label="View image {{ forloop.index }}">
+              <img src="{{ img | image_url: width: 320 }}" alt="{{ img.alt | escape }}" loading="lazy">
+            </button>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="th-info">
+      {% if product.type != blank %}<div class="th-type">{{ product.type }}</div>{% endif %}
+      <h1 class="th-title">{{ product.title }}</h1>
+      <div class="th-price" data-th-price>{{ product.selected_or_first_available_variant.price | money }}</div>
+
+      {% if product.description != blank %}
+        <p class="th-short">{{ product.description | strip_html | truncatewords: 30 }}</p>
+      {% endif %}
+
+      <div class="th-badges">
+        <span class="th-badge"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>{{ section.settings.badge_1_label }}</span>
+        <span class="th-badge"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 16.8 5.8 21.3l2.4-7.4L2 9.4h7.6z"/></svg>{{ section.settings.badge_2_label }}</span>
+        <span class="th-badge"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7L9 18l-5-5"/></svg>{{ section.settings.badge_3_label }}</span>
+      </div>
+
+      {% form 'product', product %}
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" data-th-variant-id>
+        <button type="submit" class="th-atc" {% unless product.available %}disabled{% endunless %}>
+          {% if product.available %}Add to cart{% else %}Sold out{% endif %}
+        </button>
+      {% endform %}
+    </div>
+  </div>
+
+  {% if product.description != blank %}
+    <div class="th-desc">
+      <details open>
+        <summary>{{ section.settings.description_label }}</summary>
+        <div class="th-body">{{ product.description }}</div>
+      </details>
+    </div>
+  {% endif %}
+
+  {% assign collection_handle = product.collections.first.handle %}
+  {% if collection_handle %}
+    <div class="th-related">
+      <h3>{{ section.settings.related_heading }}</h3>
+      <div class="th-rel-grid">
+        {% for p in collections[collection_handle].products limit: 3 %}
+          {% if p.id != product.id %}
+            <a class="th-rel" href="{{ p.url }}">
+              <div class="th-rel-img">
+                {% if p.featured_image %}<img src="{{ p.featured_image | image_url: width: 600 }}" alt="{{ p.title | escape }}" loading="lazy">{% endif %}
+              </div>
+              <div class="th-rel-info">
+                <div class="th-rel-type">{{ p.type | default: 'Kit' }}</div>
+                <div class="th-rel-title">{{ p.title }}</div>
+                <div class="th-rel-price">{{ p.price | money }}</div>
+              </div>
+            </a>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+<script>
+(function(){
+  var root = document.getElementById('th-product-{{ section.id }}'); if(!root) return;
+  var thumbs = root.querySelectorAll('[data-th-thumb]');
+  var mainImg = root.querySelector('#th-main-img-{{ section.id }}');
+  thumbs.forEach(function(t){
+    t.addEventListener('click', function(){
+      if(!mainImg) return;
+      mainImg.src = t.dataset.src; mainImg.alt = t.dataset.alt || '';
+      thumbs.forEach(function(x){ x.classList.remove('th-active'); });
+      t.classList.add('th-active');
+    });
+  });
+
+  var form = root.querySelector('form[action*="/cart/add"]');
+  if(form){
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var btn = form.querySelector('.th-atc');
+      var data = { id: form.querySelector('[data-th-variant-id]').value, quantity: 1 };
+      btn.disabled = true; btn.textContent = 'Adding…';
+      fetch('/cart/add.js', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data) })
+        .then(function(r){ return r.json(); })
+        .then(function(){
+          btn.textContent = 'Added ✓';
+          fetch('/cart.js').then(function(r){ return r.json(); }).then(function(c){
+            var badge = document.querySelector('[data-th-cart-count]');
+            if(badge) badge.textContent = c.item_count;
+          });
+          setTimeout(function(){ btn.disabled = false; btn.textContent = 'Add to cart'; }, 1600);
+        })
+        .catch(function(){ btn.disabled = false; btn.textContent = 'Add to cart'; });
+    });
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Tool Haus Product",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "badge_1_label", "label": "Badge 1 label", "default": "Instant Download" },
+    { "type": "text", "id": "badge_2_label", "label": "Badge 2 label", "default": "Expert Built" },
+    { "type": "text", "id": "badge_3_label", "label": "Badge 3 label", "default": "Shopify Ready" },
+    { "type": "text", "id": "description_label", "label": "Description accordion label", "default": "Full description" },
+    { "type": "text", "id": "related_heading", "label": "Related products heading", "default": "You may also like" },
+    { "type": "text", "id": "empty_image_label", "label": "Placeholder label when no image", "default": "No image available" }
+  ],
+  "presets": [{ "name": "Tool Haus Product" }]
+}
+{% endschema %}

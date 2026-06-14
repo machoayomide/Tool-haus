@@ -1,0 +1,68 @@
+{
+  "sections": {
+    "main": {
+      "type": "toolhaus-homepage",
+      "settings": {
+        "about_eyebrow": "About Tool Haus",
+        "about_heading": "We build the tools modern stores run on.",
+        "about_paragraph": "Tool Haus is a premium studio building high-converting Shopify themes, digital kits, and growth packages for ambitious ecommerce brands.",
+        "about_button_label": "Meet the studio",
+        "about_button_url": "/pages/about",
+        "about_stat_1_number": "250+",
+        "about_stat_1_label": "Stores launched",
+        "about_stat_2_number": "98%",
+        "about_stat_2_label": "Client retention",
+        "about_stat_3_number": "12M+",
+        "about_stat_3_label": "Revenue generated",
+        "about_stat_4_number": "4.9★",
+        "about_stat_4_label": "Average rating",
+        "split_1_eyebrow": "Premium Kits",
+        "split_1_heading": "Launch-ready digital kits built by experts.",
+        "split_1_paragraph": "Every kit in our catalog is hand-built, tested, and optimized for real stores. No templates. No filler. Just the tools your store needs to grow.",
+        "split_1_button_label": "Browse kits",
+        "split_1_button_url": "/collections/digital-kits",
+        "split_2_eyebrow": "Done-For-You",
+        "split_2_heading": "Themes and packages, installed and tuned.",
+        "split_2_paragraph": "From theme installation to conversion tuning, our done-for-you service hands you a store that's ready to sell on day one.",
+        "split_2_button_label": "See packages",
+        "split_2_button_url": "/collections/themes",
+        "newsletter_heading": "Get the Tool Haus drop.",
+        "newsletter_subtext": "New kits, free resources, and growth guides. One email a month. No spam.",
+        "newsletter_button_label": "Subscribe",
+        "footer_tagline": "Everything your store needs to grow.",
+        "footer_copyright": "© {{ 'now' | date: '%Y' }} Tool Haus. All rights reserved.",
+        "instagram_url": "https://instagram.com",
+        "facebook_url": "https://facebook.com",
+        "youtube_url": "https://youtube.com",
+        "tiktok_url": "https://tiktok.com"
+      },
+      "blocks": {
+        "slide_1": { "type": "slide", "settings": { "eyebrow": "Premium Shopify Themes", "heading": "Built to sell. Designed to scale.", "button_label": "Explore themes", "button_url": "/collections/themes" } },
+        "slide_2": { "type": "slide", "settings": { "eyebrow": "Digital Growth Kits", "heading": "Everything your store needs to grow.", "button_label": "Shop kits", "button_url": "/collections/digital-kits" } },
+        "slide_3": { "type": "slide", "settings": { "eyebrow": "Done-For-You Service", "heading": "Launch in days, not months.", "button_label": "Start a project", "button_url": "/pages/contact" } },
+        "slide_4": { "type": "slide", "settings": { "eyebrow": "Expert Consultation", "heading": "Strategy, built by operators.", "button_label": "Book a call", "button_url": "/pages/contact" } },
+        "trust_1": { "type": "trust_item", "settings": { "label": "Shopify Experts" } },
+        "trust_2": { "type": "trust_item", "settings": { "label": "Lifetime Updates" } },
+        "trust_3": { "type": "trust_item", "settings": { "label": "Expert Built" } },
+        "trust_4": { "type": "trust_item", "settings": { "label": "24/7 Support" } },
+        "trust_5": { "type": "trust_item", "settings": { "label": "Money-Back Guarantee" } },
+        "price_basic": { "type": "pricing_tier", "settings": { "tier": "Basic", "price": "$49", "features": "1 Digital Kit\nEmail Support\nBasic Docs\n1 Site License", "button_label": "Get Basic", "button_url": "/collections/digital-kits" } },
+        "price_standard": { "type": "pricing_tier", "settings": { "tier": "Standard", "price": "$149", "features": "3 Digital Kits\nPriority Support\nFull Docs\n3 Site Licenses\nInstallation Help", "button_label": "Get Standard", "button_url": "/collections/digital-kits", "featured": true } },
+        "price_premium": { "type": "pricing_tier", "settings": { "tier": "Premium", "price": "$399", "features": "Full Theme Package\nDedicated Support\nWhite-Glove Setup\nUnlimited Sites\nGrowth Audit", "button_label": "Get Premium", "button_url": "/collections/themes" } },
+        "test_1": { "type": "testimonial", "settings": { "quote": "Tool Haus transformed our store. Conversions doubled in the first month — the theme is genuinely world-class.", "author": "Maya R., Founder" } },
+        "test_2": { "type": "testimonial", "settings": { "quote": "The digital kits paid for themselves in a week. Clean code, fast load times, and the support is unreal.", "author": "Daniel K., CMO" } },
+        "test_3": { "type": "testimonial", "settings": { "quote": "We tried three agencies before Tool Haus. None came close. They actually understand ecommerce.", "author": "Priya S., CEO" } },
+        "promo_1": { "type": "promo_banner", "settings": { "title": "New arrivals weekly", "subtitle": "Fresh kits dropping every Friday.", "link_label": "Shop new", "link_url": "/collections/new" } },
+        "promo_2": { "type": "promo_banner", "settings": { "title": "Custom builds", "subtitle": "Need something bespoke? Let's talk.", "link_label": "Start project", "link_url": "/pages/contact" } }
+      },
+      "block_order": [
+        "slide_1", "slide_2", "slide_3", "slide_4",
+        "trust_1", "trust_2", "trust_3", "trust_4", "trust_5",
+        "price_basic", "price_standard", "price_premium",
+        "test_1", "test_2", "test_3",
+        "promo_1", "promo_2"
+      ]
+    }
+  },
+  "order": ["main"]
+}

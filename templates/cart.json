@@ -1,0 +1,23 @@
+{
+  "sections": {
+    "main": {
+      "type": "toolhaus-cart",
+      "settings": {
+        "heading": "Your cart",
+        "product_label": "Product",
+        "price_label": "Price",
+        "quantity_label": "Qty",
+        "total_label": "Total",
+        "subtotal_label": "Subtotal",
+        "note_label": "Order notes (optional)",
+        "checkout_label": "Checkout",
+        "continue_label": "Continue shopping",
+        "empty_heading": "Your cart is empty.",
+        "empty_paragraph": "Looks like you haven't added anything yet. Let's fix that.",
+        "empty_button_label": "Start shopping",
+        "remove_label": "Remove"
+      }
+    }
+  },
+  "order": ["main"]
+}

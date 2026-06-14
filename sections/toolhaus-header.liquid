@@ -1,0 +1,141 @@
+{% comment %} sections/toolhaus-header.liquid {% endcomment %}
+{%- style -%}
+  #th-header-{{ section.id }} { position: sticky; top: 0; z-index: 1000; background: #1D3A2A; color: #F5F3EE; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+  #th-header-{{ section.id }} * { box-sizing: border-box; }
+  #th-header-{{ section.id }} .th-announcement { background: #0f2018; border-bottom: 1px solid rgba(126,200,138,0.15); font-size: 13px; padding: 10px 24px; display: flex; align-items: center; justify-content: center; gap: 12px; position: relative; }
+  #th-header-{{ section.id }} .th-announcement a { color: #7EC88A; text-decoration: underline; text-underline-offset: 3px; }
+  #th-header-{{ section.id }} .th-announcement-dismiss { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); background: transparent; border: 0; color: #E8E4DA; cursor: pointer; font-size: 18px; line-height: 1; padding: 4px 8px; }
+  #th-header-{{ section.id }} .th-bar { display: flex; align-items: center; justify-content: space-between; padding: 22px 40px; transition: padding 0.3s ease, backdrop-filter 0.3s ease, background 0.3s ease; border-bottom: 1px solid rgba(126,200,138,0.08); }
+  #th-header-{{ section.id }}.th-scrolled .th-bar { padding: 14px 40px; backdrop-filter: blur(14px); background: rgba(29,58,42,0.85); }
+  #th-header-{{ section.id }} .th-logo { font-weight: 900; font-size: 26px; letter-spacing: -0.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+  #th-header-{{ section.id }} .th-logo img { max-height: 42px; width: auto; }
+  #th-header-{{ section.id }} .th-logo-text .th-tool { color: #F5F3EE; }
+  #th-header-{{ section.id }} .th-logo-text .thhaus { color: #7EC88A; }
+  #th-header-{{ section.id }} nav.th-nav { display: flex; gap: 36px; }
+  #th-header-{{ section.id }} nav.th-nav a { color: #E8E4DA; text-decoration: none; font-size: 14px; font-weight: 500; letter-spacing: 0.3px; position: relative; padding: 6px 0; transition: color 0.2s; }
+  #th-header-{{ section.id }} nav.th-nav a::after { content: ''; position: absolute; left: 0; bottom: 0; height: 2px; width: 0; background: #7EC88A; transition: width 0.25s ease; }
+  #th-header-{{ section.id }} nav.th-nav a:hover { color: #7EC88A; }
+  #th-header-{{ section.id }} nav.th-nav a:hover::after { width: 100%; }
+  #th-header-{{ section.id }} .th-icons { display: flex; gap: 18px; align-items: center; }
+  #th-header-{{ section.id }} .th-icon-btn { background: transparent; border: 0; color: #F5F3EE; cursor: pointer; padding: 6px; position: relative; display: inline-flex; }
+  #th-header-{{ section.id }} .th-icon-btn:hover { color: #7EC88A; }
+  #th-header-{{ section.id }} .th-cart-count { position: absolute; top: -4px; right: -6px; background: #7EC88A; color: #1D3A2A; font-size: 10px; font-weight: 800; min-width: 18px; height: 18px; border-radius: 9px; display: inline-flex; align-items: center; justify-content: center; padding: 0 5px; }
+  #th-header-{{ section.id }} .th-hamburger { display: none; background: transparent; border: 0; color: #F5F3EE; cursor: pointer; padding: 6px; }
+  #th-header-{{ section.id }} .th-drawer { position: fixed; inset: 0; background: #0f2018; z-index: 1100; transform: translateX(-100%); transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1); padding: 32px; display: flex; flex-direction: column; gap: 24px; }
+  #th-header-{{ section.id }} .th-drawer.th-open { transform: translateX(0); }
+  #th-header-{{ section.id }} .th-drawer-top { display: flex; justify-content: space-between; align-items: center; }
+  #th-header-{{ section.id }} .th-drawer-close { background: transparent; border: 0; color: #F5F3EE; font-size: 28px; cursor: pointer; }
+  #th-header-{{ section.id }} .th-drawer nav { display: flex; flex-direction: column; gap: 22px; margin-top: 32px; }
+  #th-header-{{ section.id }} .th-drawer nav a { color: #F5F3EE; text-decoration: none; font-size: 24px; font-weight: 700; }
+  #th-header-{{ section.id }} .th-drawer nav a:hover { color: #7EC88A; }
+  @media (max-width: 960px) {
+    #th-header-{{ section.id }} nav.th-nav { display: none; }
+    #th-header-{{ section.id }} .th-hamburger { display: inline-flex; }
+    #th-header-{{ section.id }} .th-bar { padding: 18px 20px; }
+    #th-header-{{ section.id }}.th-scrolled .th-bar { padding: 12px 20px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #th-header-{{ section.id }} *, #th-header-{{ section.id }} *::before, #th-header-{{ section.id }} *::after { transition: none !important; animation: none !important; }
+  }
+{%- endstyle -%}
+
+<div id="th-header-{{ section.id }}">
+  {% if section.settings.show_announcement and section.settings.announcement_text != blank %}
+    <div class="th-announcement" data-th-announcement>
+      <span>{{ section.settings.announcement_text }}</span>
+      {% if section.settings.announcement_link != blank %}
+        <a href="{{ section.settings.announcement_link }}">{{ section.settings.announcement_link_label | default: 'Learn more →' }}</a>
+      {% endif %}
+      <button class="th-announcement-dismiss" aria-label="Dismiss" data-th-dismiss>×</button>
+    </div>
+  {% endif %}
+
+  <div class="th-bar">
+    <a href="/" class="th-logo" aria-label="Tool Haus home">
+      {% if section.settings.logo_image != blank %}
+        <img src="{{ section.settings.logo_image | image_url: width: 240 }}" alt="{{ shop.name | escape }}" loading="eager">
+      {% else %}
+        <span class="th-logo-text"><span class="th-tool">Tool</span><span class="thhaus">Haus</span></span>
+      {% endif %}
+    </a>
+
+    <nav class="th-nav" aria-label="Primary">
+      {% for link in linklists[section.settings.menu_handle].links %}
+        <a href="{{ link.url }}">{{ link.title }}</a>
+      {% endfor %}
+    </nav>
+
+    <div class="th-icons">
+      <button class="th-icon-btn" aria-label="Search">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      </button>
+      <a class="th-icon-btn" href="/account" aria-label="Account">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </a>
+      <a class="th-icon-btn" href="/cart" aria-label="Cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+        {% if cart.item_count > 0 %}
+          <span class="th-cart-count" data-th-cart-count>{{ cart.item_count }}</span>
+        {% endif %}
+      </a>
+      <button class="th-hamburger" aria-label="Open menu" data-th-open-drawer>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="th-drawer" data-th-drawer aria-hidden="true">
+    <div class="th-drawer-top">
+      <a href="/" class="th-logo"><span class="th-logo-text"><span class="th-tool">Tool</span><span class="thhaus">Haus</span></span></a>
+      <button class="th-drawer-close" aria-label="Close menu" data-th-close-drawer>×</button>
+    </div>
+    <nav aria-label="Mobile">
+      {% for link in linklists[section.settings.menu_handle].links %}
+        <a href="{{ link.url }}">{{ link.title }}</a>
+      {% endfor %}
+    </nav>
+  </div>
+</div>
+
+<script>
+(function(){
+  var root = document.getElementById('th-header-{{ section.id }}');
+  if(!root) return;
+  var bar = root.querySelector('.th-bar');
+  var onScroll = function(){ if(window.scrollY > 80) root.classList.add('th-scrolled'); else root.classList.remove('th-scrolled'); };
+  window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  var ann = root.querySelector('[data-th-announcement]');
+  if(ann){
+    var dismissed = sessionStorage.getItem('th-ann-dismiss');
+    if(dismissed){ ann.style.display = 'none'; }
+    var btn = ann.querySelector('[data-th-dismiss]');
+    if(btn) btn.addEventListener('click', function(){ ann.style.display = 'none'; sessionStorage.setItem('th-ann-dismiss','1'); });
+  }
+
+  var drawer = root.querySelector('[data-th-drawer]');
+  var openBtn = root.querySelector('[data-th-open-drawer]');
+  var closeBtn = root.querySelector('[data-th-close-drawer]');
+  function setOpen(v){ if(!drawer) return; drawer.classList.toggle('th-open', v); drawer.setAttribute('aria-hidden', v ? 'false' : 'true'); document.body.style.overflow = v ? 'hidden' : ''; }
+  if(openBtn) openBtn.addEventListener('click', function(){ setOpen(true); });
+  if(closeBtn) closeBtn.addEventListener('click', function(){ setOpen(false); });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Tool Haus Header",
+  "settings": [
+    { "type": "header", "content": "Announcement bar" },
+    { "type": "checkbox", "id": "show_announcement", "label": "Show announcement bar", "default": true },
+    { "type": "text", "id": "announcement_text", "label": "Announcement text", "default": "Free shipping on orders over $99 · Lifetime updates on every kit" },
+    { "type": "url", "id": "announcement_link", "label": "Announcement link URL" },
+    { "type": "text", "id": "announcement_link_label", "label": "Announcement link label", "default": "Learn more →" },
+    { "type": "header", "content": "Logo" },
+    { "type": "image_picker", "id": "logo_image", "label": "Logo image (optional)" },
+    { "type": "header", "content": "Navigation" },
+    { "type": "link_list", "id": "menu_handle", "label": "Main menu", "default": "main-menu" }
+  ],
+  "presets": [{ "name": "Tool Haus Header" }]
+}
+{% endschema %}

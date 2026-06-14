@@ -1,0 +1,16 @@
+{
+  "sections": {
+    "main": {
+      "type": "toolhaus-collection",
+      "settings": {
+        "sort_label": "Sort by",
+        "products_label": "products",
+        "empty_heading": "Nothing here yet.",
+        "empty_paragraph": "This collection is being restocked. Check back soon — or browse everything we have.",
+        "empty_button_label": "Browse all",
+        "empty_button_url": "/collections/all"
+      }
+    }
+  },
+  "order": ["main"]
+}

@@ -1,0 +1,728 @@
+{% comment %} sections/toolhaus-homepage.liquid {% endcomment %}
+{%- style -%}
+  /* ============ ROOT / RESET ============ */
+  #th-home-{{ section.id }} { background: #1D3A2A; color: #F5F3EE; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  #th-home-{{ section.id }} *, #th-home-{{ section.id }} *::before, #th-home-{{ section.id }} *::after { box-sizing: border-box; }
+  #th-home-{{ section.id }} a { color: inherit; }
+  #th-home-{{ section.id }} button { font-family: inherit; }
+
+  /* ============ HERO ============ */
+  #th-home-{{ section.id }} .th-hero { position: relative; height: 100vh; min-height: 640px; overflow: hidden; background: radial-gradient(ellipse at 20% 40%, #2F5E42 0%, #1D3A2A 45%, #0f2018 100%); }
+  #th-home-{{ section.id }} .th-hero::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(circle at 70% 30%, rgba(126,200,138,0.12) 0%, transparent 45%),
+      radial-gradient(circle at 30% 80%, rgba(126,200,138,0.08) 0%, transparent 50%);
+    z-index: 1;
+  }
+  #th-home-{{ section.id }} .th-hero-canvas { position: absolute; inset: 0; z-index: 2; }
+  #th-home-{{ section.id }} .th-hero-grid { position: absolute; inset: 0; z-index: 1; perspective: 600px; overflow: hidden; pointer-events: none; }
+  #th-home-{{ section.id }} .th-hero-grid-inner {
+    position: absolute; left: 50%; top: 50%; width: 180vw; height: 180vh;
+    transform: translate(-50%, -50%) rotateX(62deg);
+    background-image:
+      linear-gradient(to right, rgba(126,200,138,0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(126,200,138,0.08) 1px, transparent 1px);
+    background-size: 80px 80px;
+    animation: th-grid-drift 18s linear infinite;
+  }
+  @keyframes th-grid-drift { from { background-position: 0 0; } to { background-position: 0 80px; } }
+  #th-home-{{ section.id }} .th-hero-track { position: absolute; inset: 0; z-index: 3; perspective: 1400px; perspective-origin: 50% 50%; }
+  #th-home-{{ section.id }} .th-slide {
+    position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 0 24px; text-align: center;
+    opacity: 0; transform: translate3d(0, 0, -800px) scale(0.85); pointer-events: none;
+    transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1), opacity 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform, opacity;
+  }
+  #th-home-{{ section.id }} .th-slide.th-active { opacity: 1; transform: translate3d(0, 0, 0) scale(1); pointer-events: auto; }
+  #th-home-{{ section.id }} .th-slide.th-prev { opacity: 0; transform: translate3d(0, 0, 900px) scale(1.15); }
+  #th-home-{{ section.id }} .th-eyebrow { font-size: 12px; letter-spacing: 3.5px; text-transform: uppercase; color: #7EC88A; font-weight: 700; margin-bottom: 22px; display: inline-block; opacity: 0; transform: translateY(14px); transition: opacity 0.7s ease 0.2s, transform 0.7s ease 0.2s; }
+  #th-home-{{ section.id }} .th-slide.th-active .th-eyebrow { opacity: 1; transform: translateY(0); }
+  #th-home-{{ section.id }} .th-heading {
+    font-size: clamp(44px, 9vw, 110px); font-weight: 900; letter-spacing: -2.5px; line-height: 0.98;
+    max-width: 1400px; margin: 0 auto 40px; position: relative; display: inline-block;
+    opacity: 0; transform: translateY(24px); transition: opacity 0.8s ease 0.35s, transform 0.8s ease 0.35s;
+  }
+  #th-home-{{ section.id }} .th-slide.th-active .th-heading { opacity: 1; transform: translateY(0); }
+  #th-home-{{ section.id }} .th-heading::after {
+    content: ''; position: absolute; left: 0; bottom: -6px; height: 4px; width: 0; background: #7EC88A;
+    transition: width 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.8s;
+  }
+  #th-home-{{ section.id }} .th-slide.th-active .th-heading::after { width: 100%; }
+  #th-home-{{ section.id }} .th-hero-btn {
+    display: inline-block; background: #7EC88A; color: #1D3A2A; padding: 18px 38px; border-radius: 999px;
+    text-decoration: none; font-weight: 800; font-size: 13px; letter-spacing: 2px; text-transform: uppercase;
+    border: 0; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s;
+    opacity: 0; transform: translateY(18px); transition-delay: 0s; transition-property: opacity, transform; transition-duration: 0.7s; transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  #th-home-{{ section.id }} .th-slide.th-active .th-hero-btn { opacity: 1; transform: translateY(0); transition-delay: 0.7s; }
+  #th-home-{{ section.id }} .th-hero-btn:hover { transform: translateY(-3px); box-shadow: 0 18px 40px rgba(126,200,138,0.35); }
+  #th-home-{{ section.id }} .th-hero-arrows { position: absolute; top: 50%; left: 0; right: 0; z-index: 5; display: flex; justify-content: space-between; padding: 0 28px; transform: translateY(-50%); pointer-events: none; }
+  #th-home-{{ section.id }} .th-hero-arrow { pointer-events: auto; width: 52px; height: 52px; border-radius: 50%; border: 1px solid rgba(126,200,138,0.35); background: rgba(15,32,24,0.5); backdrop-filter: blur(8px); color: #F5F3EE; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all 0.25s; }
+  #th-home-{{ section.id }} .th-hero-arrow:hover { background: #7EC88A; color: #1D3A2A; border-color: #7EC88A; }
+  #th-home-{{ section.id }} .th-hero-dots { position: absolute; bottom: 54px; left: 50%; transform: translateX(-50%); z-index: 5; display: flex; gap: 10px; }
+  #th-home-{{ section.id }} .th-dot { width: 34px; height: 3px; background: rgba(245,243,238,0.25); border: 0; cursor: pointer; border-radius: 2px; padding: 0; transition: background 0.25s; }
+  #th-home-{{ section.id }} .th-dot.th-active { background: #7EC88A; }
+  #th-home-{{ section.id }} .th-progress { position: absolute; left: 0; bottom: 0; height: 3px; width: 0; background: #7EC88A; z-index: 6; box-shadow: 0 0 12px rgba(126,200,138,0.8); }
+
+  /* ============ TRUST ============ */
+  #th-home-{{ section.id }} .th-trust { background: #2F5E42; padding: 28px 40px; }
+  #th-home-{{ section.id }} .th-trust-row { max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
+  #th-home-{{ section.id }} .th-trust-item { display: inline-flex; align-items: center; gap: 10px; color: #F5F3EE; font-size: 13px; font-weight: 600; letter-spacing: 0.3px; opacity: 0; transform: translateY(12px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  #th-home-{{ section.id }} .th-trust-item.th-visible { opacity: 1; transform: translateY(0); }
+  #th-home-{{ section.id }} .th-trust-item svg { color: #7EC88A; flex-shrink: 0; }
+
+  /* ============ ABOUT ============ */
+  #th-home-{{ section.id }} .th-about { background: #1D3A2A; padding: 120px 40px; }
+  #th-home-{{ section.id }} .th-about-grid { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+  #th-home-{{ section.id }} .th-about-left { opacity: 0; transform: translateX(-40px); transition: opacity 0.9s ease, transform 0.9s ease; }
+  #th-home-{{ section.id }} .th-about-right { opacity: 0; transform: translateX(40px); transition: opacity 0.9s ease 0.15s, transform 0.9s ease 0.15s; }
+  #th-home-{{ section.id }} .th-about-left.th-visible, #th-home-{{ section.id }} .th-about-right.th-visible { opacity: 1; transform: translateX(0); }
+  #th-home-{{ section.id }} .th-eyebrow-line { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #7EC88A; font-weight: 700; margin-bottom: 18px; }
+  #th-home-{{ section.id }} .th-about h2 { font-size: clamp(34px, 4.5vw, 54px); font-weight: 900; letter-spacing: -1px; line-height: 1.05; margin: 0 0 22px; }
+  #th-home-{{ section.id }} .th-about p { color: #E8E4DA; font-size: 16px; line-height: 1.75; margin: 0 0 30px; max-width: 520px; }
+  #th-home-{{ section.id }} .th-btn { display: inline-block; background: #7EC88A; color: #1D3A2A; padding: 16px 30px; border-radius: 999px; text-decoration: none; font-weight: 800; font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; transition: transform 0.25s, box-shadow 0.25s; }
+  #th-home-{{ section.id }} .th-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(126,200,138,0.3); }
+  #th-home-{{ section.id }} .th-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  #th-home-{{ section.id }} .th-stat { background: #2F5E42; border: 1px solid rgba(126,200,138,0.15); border-radius: 14px; padding: 28px; transition: transform 0.3s, border-color 0.3s; }
+  #th-home-{{ section.id }} .th-stat:hover { transform: translateY(-4px); border-color: rgba(126,200,138,0.5); }
+  #th-home-{{ section.id }} .th-stat-num { font-size: 42px; font-weight: 900; color: #7EC88A; letter-spacing: -1px; line-height: 1; margin-bottom: 10px; }
+  #th-home-{{ section.id }} .th-stat-label { font-size: 13px; color: #E8E4DA; letter-spacing: 0.5px; }
+
+  /* ============ PRODUCT GRID ============ */
+  #th-home-{{ section.id }} .th-grid-section { background: #0f2018; padding: 120px 40px; }
+  #th-home-{{ section.id }} .th-section-head { max-width: 1280px; margin: 0 auto 56px; display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; }
+  #th-home-{{ section.id }} .th-section-head h2 { font-size: clamp(32px, 4vw, 52px); font-weight: 900; letter-spacing: -1px; margin: 0; }
+  #th-home-{{ section.id }} .th-section-head a { color: #7EC88A; text-decoration: none; font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; border-bottom: 1px solid transparent; padding-bottom: 2px; transition: border-color 0.25s; }
+  #th-home-{{ section.id }} .th-section-head a:hover { border-color: #7EC88A; }
+  #th-home-{{ section.id }} .th-products { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  #th-home-{{ section.id }} .th-pcard { background: #1D3A2A; border-radius: 14px; overflow: hidden; text-decoration: none; color: inherit; transition: transform 0.35s cubic-bezier(0.22,1,0.36,1), box-shadow 0.35s; display: flex; flex-direction: column; opacity: 0; transform: translateY(30px); }
+  #th-home-{{ section.id }} .th-pcard.th-visible { opacity: 1; transform: translateY(0); }
+  #th-home-{{ section.id }} .th-pcard:hover { transform: translateY(-6px); box-shadow: 0 22px 48px rgba(126,200,138,0.2); }
+  #th-home-{{ section.id }} .th-pcard-img { aspect-ratio: 4/5; background: #0f2018; overflow: hidden; }
+  #th-home-{{ section.id }} .th-pcard-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s; }
+  #th-home-{{ section.id }} .th-pcard:hover .th-pcard-img img { transform: scale(1.06); }
+  #th-home-{{ section.id }} .th-pcard-info { padding: 24px; }
+  #th-home-{{ section.id }} .th-pcard-type { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #7EC88A; font-weight: 700; margin-bottom: 10px; }
+  #th-home-{{ section.id }} .th-pcard-title { font-weight: 700; font-size: 18px; margin: 0 0 12px; line-height: 1.3; }
+  #th-home-{{ section.id }} .th-pcard-price { font-size: 16px; color: #E8E4DA; }
+  #th-home-{{ section.id }} .th-grid-empty { max-width: 1280px; margin: 0 auto; text-align: center; color: #E8E4DA; padding: 40px; }
+
+  /* ============ SPLIT ROWS ============ */
+  #th-home-{{ section.id }} .th-split { background: #2F5E42; padding: 120px 40px; }
+  #th-home-{{ section.id }} .th-split-row { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+  #th-home-{{ section.id }} .th-split-row + .th-split-row { margin-top: 120px; }
+  #th-home-{{ section.id }} .th-split-media { aspect-ratio: 4/3; background: linear-gradient(135deg, #0f2018 0%, #1D3A2A 100%); border-radius: 18px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; border: 1px solid rgba(126,200,138,0.15); }
+  #th-home-{{ section.id }} .th-split-media img { width: 100%; height: 100%; object-fit: cover; border-radius: 18px; }
+  #th-home-{{ section.id }} .th-split-media svg { width: 72px; height: 72px; color: #7EC88A; }
+  #th-home-{{ section.id }} .th-split-content h2 { font-size: clamp(30px, 3.8vw, 44px); font-weight: 900; letter-spacing: -0.8px; line-height: 1.08; margin: 0 0 20px; }
+  #th-home-{{ section.id }} .th-split-content p { color: #E8E4DA; font-size: 16px; line-height: 1.75; margin: 0 0 28px; }
+  #th-home-{{ section.id }} .th-split-row:nth-child(1) .th-split-media { opacity: 0; transform: translateX(-40px); transition: opacity 0.9s ease, transform 0.9s ease; }
+  #th-home-{{ section.id }} .th-split-row:nth-child(1) .th-split-content { opacity: 0; transform: translateX(40px); transition: opacity 0.9s ease 0.15s, transform 0.9s ease 0.15s; }
+  #th-home-{{ section.id }} .th-split-row:nth-child(2) .th-split-media { opacity: 0; transform: translateX(40px); transition: opacity 0.9s ease, transform 0.9s ease; order: 2; }
+  #th-home-{{ section.id }} .th-split-row:nth-child(2) .th-split-content { opacity: 0; transform: translateX(-40px); transition: opacity 0.9s ease 0.15s, transform 0.9s ease 0.15s; order: 1; }
+  #th-home-{{ section.id }} .th-split-row.th-visible .th-split-media,
+  #th-home-{{ section.id }} .th-split-row.th-visible .th-split-content { opacity: 1; transform: translateX(0); }
+
+  /* ============ PRICING ============ */
+  #th-home-{{ section.id }} .th-pricing { background: #0f2018; padding: 120px 40px; }
+  #th-home-{{ section.id }} .th-pricing h2 { font-size: clamp(32px, 4vw, 52px); font-weight: 900; letter-spacing: -1px; margin: 0 0 56px; text-align: center; }
+  #th-home-{{ section.id }} .th-plans { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  #th-home-{{ section.id }} .th-plan { background: #1D3A2A; border: 1px solid rgba(126,200,138,0.15); border-radius: 18px; padding: 40px 34px; position: relative; opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease, box-shadow 0.3s; }
+  #th-home-{{ section.id }} .th-plan.th-visible { opacity: 1; transform: translateY(0); }
+  #th-home-{{ section.id }} .th-plan.th-featured { border-color: #7EC88A; box-shadow: 0 24px 60px rgba(126,200,138,0.15); transform: translateY(0) scale(1.03); }
+  #th-home-{{ section.id }} .th-plan.th-featured.th-visible { transform: translateY(-8px) scale(1.03); }
+  #th-home-{{ section.id }} .th-plan-badge { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: #7EC88A; color: #1D3A2A; padding: 6px 16px; border-radius: 999px; font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; white-space: nowrap; }
+  #th-home-{{ section.id }} .th-plan-tier { font-size: 12px; letter-spacing: 2.5px; text-transform: uppercase; color: #7EC88A; font-weight: 700; margin-bottom: 14px; }
+  #th-home-{{ section.id }} .th-plan-price { font-size: 54px; font-weight: 900; letter-spacing: -2px; margin-bottom: 28px; }
+  #th-home-{{ section.id }} .th-plan-features { list-style: none; padding: 0; margin: 0 0 32px; display: flex; flex-direction: column; gap: 12px; }
+  #th-home-{{ section.id }} .th-plan-features li { color: #E8E4DA; font-size: 14px; display: flex; align-items: center; gap: 10px; line-height: 1.5; }
+  #th-home-{{ section.id }} .th-plan-features li::before { content: ''; width: 16px; height: 16px; flex-shrink: 0; background: #7EC88A; -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3'><path d='M20 6L9 17l-5-5'/></svg>") center/contain no-repeat; mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3'><path d='M20 6L9 17l-5-5'/></svg>") center/contain no-repeat; }
+  #th-home-{{ section.id }} .th-plan-cta { display: block; text-align: center; background: transparent; color: #F5F3EE; border: 1px solid rgba(245,243,238,0.3); padding: 14px; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; transition: all 0.25s; }
+  #th-home-{{ section.id }} .th-plan-cta:hover { background: #7EC88A; color: #1D3A2A; border-color: #7EC88A; transform: translateY(-3px); box-shadow: 0 14px 28px rgba(126,200,138,0.3); }
+  #th-home-{{ section.id }} .th-plan.th-featured .th-plan-cta { background: #7EC88A; color: #1D3A2A; border-color: #7EC88A; }
+
+  /* ============ NEWSLETTER ============ */
+  #th-home-{{ section.id }} .th-news { background: #2F5E42; padding: 80px 40px; }
+  #th-home-{{ section.id }} .th-news-inner { max-width: 820px; margin: 0 auto; text-align: center; }
+  #th-home-{{ section.id }} .th-news h2 { font-size: clamp(28px, 4vw, 44px); font-weight: 900; letter-spacing: -0.5px; margin: 0 0 14px; }
+  #th-home-{{ section.id }} .th-news p { color: #E8E4DA; margin: 0 0 28px; font-size: 15px; }
+  #th-home-{{ section.id }} .th-news form { display: flex; gap: 10px; max-width: 520px; margin: 0 auto; }
+  #th-home-{{ section.id }} .th-news input[type=email] { flex: 1; background: rgba(15,32,24,0.5); border: 1px solid rgba(126,200,138,0.3); color: #F5F3EE; padding: 16px 18px; border-radius: 999px; font-size: 14px; outline: none; font-family: inherit; }
+  #th-home-{{ section.id }} .th-news input[type=email]:focus { border-color: #7EC88A; }
+  #th-home-{{ section.id }} .th-news button { background: #7EC88A; color: #1D3A2A; border: 0; padding: 16px 28px; border-radius: 999px; font-weight: 800; font-size: 13px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: transform 0.25s, box-shadow 0.25s; }
+  #th-home-{{ section.id }} .th-news button:hover { transform: translateY(-3px); box-shadow: 0 12px 24px rgba(126,200,138,0.3); }
+
+  /* ============ TESTIMONIALS ============ */
+  #th-home-{{ section.id }} .th-testimonials { background: #1D3A2A; padding: 120px 40px; }
+  #th-home-{{ section.id }} .th-testimonials h2 { font-size: clamp(32px, 4vw, 52px); font-weight: 900; letter-spacing: -1px; margin: 0 0 56px; text-align: center; }
+  #th-home-{{ section.id }} .th-test-grid { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  #th-home-{{ section.id }} .th-test { background: #2F5E42; border: 1px solid rgba(126,200,138,0.15); border-radius: 16px; padding: 32px; opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  #th-home-{{ section.id }} .th-test.th-visible { opacity: 1; transform: translateY(0); }
+  #th-home-{{ section.id }} .th-stars { display: flex; gap: 3px; color: #7EC88A; margin-bottom: 18px; }
+  #th-home-{{ section.id }} .th-quote { font-size: 16px; line-height: 1.7; margin: 0 0 22px; color: #F5F3EE; }
+  #th-home-{{ section.id }} .th-author { font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: #7EC88A; font-weight: 700; }
+
+  /* ============ PROMOS ============ */
+  #th-home-{{ section.id }} .th-promos { background: #0f2018; padding: 100px 40px; }
+  #th-home-{{ section.id }} .th-promo-grid { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  #th-home-{{ section.id }} .th-promo { background: #1D3A2A; border: 1px solid rgba(126,200,138,0.15); border-radius: 18px; padding: 48px 40px; text-decoration: none; color: inherit; display: block; transition: transform 0.35s, border-color 0.35s, box-shadow 0.35s; }
+  #th-home-{{ section.id }} .th-promo:hover { transform: translateY(-6px); border-color: #7EC88A; box-shadow: 0 24px 48px rgba(126,200,138,0.15); }
+  #th-home-{{ section.id }} .th-promo-icon { width: 52px; height: 52px; border-radius: 12px; background: rgba(126,200,138,0.12); display: inline-flex; align-items: center; justify-content: center; color: #7EC88A; margin-bottom: 22px; }
+  #th-home-{{ section.id }} .th-promo-label { font-size: 12px; letter-spacing: 2.5px; text-transform: uppercase; color: #7EC88A; font-weight: 700; margin-bottom: 12px; }
+  #th-home-{{ section.id }} .th-promo h3 { font-size: clamp(24px, 3vw, 34px); font-weight: 900; letter-spacing: -0.5px; margin: 0 0 12px; line-height: 1.1; }
+  #th-home-{{ section.id }} .th-promo-link { display: inline-flex; align-items: center; gap: 8px; color: #7EC88A; font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 12px; }
+
+  /* ============ FOOTER ============ */
+  #th-home-{{ section.id }} .th-footer { background: #0f2018; color: #F5F3EE; padding: 80px 40px 32px; }
+  #th-home-{{ section.id }} .th-footer-wrap { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr 1.4fr; gap: 48px; }
+  #th-home-{{ section.id }} .th-fcol h4 { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: #7EC88A; margin: 0 0 18px; font-weight: 700; }
+  #th-home-{{ section.id }} .th-fcol p, #th-home-{{ section.id }} .th-fcol a { color: #E8E4DA; font-size: 14px; line-height: 1.7; text-decoration: none; }
+  #th-home-{{ section.id }} .th-fcol ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+  #th-home-{{ section.id }} .th-fcol ul a:hover { color: #7EC88A; }
+  #th-home-{{ section.id }} .th-flogo { font-weight: 900; font-size: 28px; display: inline-flex; gap: 6px; margin-bottom: 14px; }
+  #th-home-{{ section.id }} .th-flogo .ft { color: #F5F3EE; }
+  #th-home-{{ section.id }} .th-flogo .fh { color: #7EC88A; }
+  #th-home-{{ section.id }} .th-socials { display: flex; gap: 12px; margin-top: 18px; }
+  #th-home-{{ section.id }} .th-socials a { width: 38px; height: 38px; border: 1px solid rgba(126,200,138,0.3); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #F5F3EE; transition: all 0.25s; }
+  #th-home-{{ section.id }} .th-socials a:hover { background: #7EC88A; color: #1D3A2A; border-color: #7EC88A; transform: translateY(-2px); }
+  #th-home-{{ section.id }} .th-fnews form { display: flex; gap: 8px; margin-top: 14px; }
+  #th-home-{{ section.id }} .th-fnews input { flex: 1; background: rgba(245,243,238,0.06); border: 1px solid rgba(126,200,138,0.25); color: #F5F3EE; padding: 12px 14px; border-radius: 6px; font-size: 13px; outline: none; }
+  #th-home-{{ section.id }} .th-fnews input:focus { border-color: #7EC88A; }
+  #th-home-{{ section.id }} .th-fnews button { background: #7EC88A; color: #1D3A2A; border: 0; padding: 12px 18px; border-radius: 6px; font-weight: 700; font-size: 13px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; }
+  #th-home-{{ section.id }} .th-fbottom { max-width: 1280px; margin: 60px auto 0; padding-top: 28px; border-top: 1px solid rgba(126,200,138,0.12); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; font-size: 13px; color: #E8E4DA; }
+  #th-home-{{ section.id }} .th-payments { display: flex; gap: 8px; align-items: center; }
+  #th-home-{{ section.id }} .th-payments svg { height: 22px; width: auto; opacity: 0.85; }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 960px) {
+    #th-home-{{ section.id }} .th-about-grid, #th-home-{{ section.id }} .th-split-row { grid-template-columns: 1fr; gap: 40px; }
+    #th-home-{{ section.id }} .th-split-row:nth-child(2) .th-split-media { order: 1; }
+    #th-home-{{ section.id }} .th-split-row:nth-child(2) .th-split-content { order: 2; }
+    #th-home-{{ section.id }} .th-products, #th-home-{{ section.id }} .th-plans, #th-home-{{ section.id }} .th-test-grid { grid-template-columns: repeat(2, 1fr); }
+    #th-home-{{ section.id }} .th-footer-wrap { grid-template-columns: 1fr 1fr; }
+    #th-home-{{ section.id }} .th-about, #th-home-{{ section.id }} .th-grid-section, #th-home-{{ section.id }} .th-split, #th-home-{{ section.id }} .th-pricing, #th-home-{{ section.id }} .th-testimonials, #th-home-{{ section.id }} .th-promos { padding-left: 20px; padding-right: 20px; }
+    #th-home-{{ section.id }} .th-hero-arrows { padding: 0 14px; }
+  }
+  @media (max-width: 640px) {
+    #th-home-{{ section.id }} .th-products, #th-home-{{ section.id }} .th-plans, #th-home-{{ section.id }} .th-test-grid, #th-home-{{ section.id }} .th-promo-grid, #th-home-{{ section.id }} .th-footer-wrap { grid-template-columns: 1fr; }
+    #th-home-{{ section.id }} .th-news form { flex-direction: column; }
+    #th-home-{{ section.id }} .th-hero { min-height: 560px; }
+  }
+
+  /* ============ REDUCED MOTION ============ */
+  @media (prefers-reduced-motion: reduce) {
+    #th-home-{{ section.id }} *, #th-home-{{ section.id }} *::before, #th-home-{{ section.id }} *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+    #th-home-{{ section.id }} .th-slide { transform: none; opacity: 0; }
+    #th-home-{{ section.id }} .th-slide.th-active { opacity: 1; }
+    #th-home-{{ section.id }} .th-pcard, #th-home-{{ section.id }} .th-plan, #th-home-{{ section.id }} .th-test, #th-home-{{ section.id }} .th-trust-item, #th-home-{{ section.id }} .th-about-left, #th-home-{{ section.id }} .th-about-right, #th-home-{{ section.id }} .th-split-row .th-split-media, #th-home-{{ section.id }} .th-split-row .th-split-content { opacity: 1; transform: none; }
+    #th-home-{{ section.id }} .th-hero-grid-inner { animation: none; }
+  }
+{%- endstyle -%}
+
+<div id="th-home-{{ section.id }}">
+
+  {%- comment -%} =================== HERO =================== {%- endcomment -%}
+  <section class="th-hero" data-th-hero>
+    <canvas class="th-hero-canvas" data-th-canvas></canvas>
+    <div class="th-hero-grid"><div class="th-hero-grid-inner"></div></div>
+
+    <div class="th-hero-track" data-th-track>
+      {% assign slides = section.blocks | where: 'type', 'slide' %}
+      {% for block in slides %}
+        <div class="th-slide {% if forloop.first %}th-active{% endif %}" {{ block.shopify_attributes }}>
+          {% if block.settings.eyebrow != blank %}<span class="th-eyebrow">{{ block.settings.eyebrow }}</span>{% endif %}
+          <h2 class="th-heading">{{ block.settings.heading }}</h2>
+          {% if block.settings.button_label != blank %}
+            <a class="th-hero-btn" href="{{ block.settings.button_url }}">{{ block.settings.button_label }}</a>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="th-hero-arrows">
+      <button class="th-hero-arrow" data-th-arrow="prev" aria-label="Previous slide">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <button class="th-hero-arrow" data-th-arrow="next" aria-label="Next slide">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+
+    <div class="th-hero-dots" data-th-dots>
+      {% for block in slides %}<button class="th-dot {% if forloop.first %}th-active{% endif %}" data-th-dot="{{ forloop.index0 }}" aria-label="Go to slide {{ forloop.index }}"></button>{% endfor %}
+    </div>
+    <div class="th-progress" data-th-progress></div>
+  </section>
+
+  {%- comment -%} =================== TRUST =================== {%- endcomment -%}
+  <section class="th-trust">
+    <div class="th-trust-row">
+      {% assign trusts = section.blocks | where: 'type', 'trust_item' %}
+      {% for block in trusts %}
+        <div class="th-trust-item" data-th-reveal>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          <span>{{ block.settings.label }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  {%- comment -%} =================== ABOUT =================== {%- endcomment -%}
+  <section class="th-about">
+    <div class="th-about-grid">
+      <div class="th-about-left" data-th-reveal>
+        <div class="th-eyebrow-line">{{ section.settings.about_eyebrow }}</div>
+        <h2>{{ section.settings.about_heading }}</h2>
+        <p>{{ section.settings.about_paragraph }}</p>
+        {% if section.settings.about_button_label != blank %}
+          <a class="th-btn" href="{{ section.settings.about_button_url }}">{{ section.settings.about_button_label }}</a>
+        {% endif %}
+      </div>
+      <div class="th-about-right" data-th-reveal>
+        <div class="th-stats">
+          <div class="th-stat"><div class="th-stat-num">{{ section.settings.about_stat_1_number }}</div><div class="th-stat-label">{{ section.settings.about_stat_1_label }}</div></div>
+          <div class="th-stat"><div class="th-stat-num">{{ section.settings.about_stat_2_number }}</div><div class="th-stat-label">{{ section.settings.about_stat_2_label }}</div></div>
+          <div class="th-stat"><div class="th-stat-num">{{ section.settings.about_stat_3_number }}</div><div class="th-stat-label">{{ section.settings.about_stat_3_label }}</div></div>
+          <div class="th-stat"><div class="th-stat-num">{{ section.settings.about_stat_4_number }}</div><div class="th-stat-label">{{ section.settings.about_stat_4_label }}</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {%- comment -%} =================== PRODUCT GRID =================== {%- endcomment -%}
+  {% assign kits_collection = collections[section.settings.kits_collection_handle] %}
+  <section class="th-grid-section">
+    <div class="th-section-head">
+      <h2>{{ section.settings.kits_heading }}</h2>
+      {% if kits_collection.handle != blank %}<a href="{{ kits_collection.url }}">{{ section.settings.kits_link_label }}</a>{% endif %}
+    </div>
+    {% if kits_collection.products.size > 0 %}
+      <div class="th-products">
+        {% for product in kits_collection.products limit: 6 %}
+          <a class="th-pcard" href="{{ product.url }}" data-th-stagger style="transition-delay: {{ forloop.index0 | times: 0.1 }}s">
+            <div class="th-pcard-img">
+              {% if product.featured_image %}
+                <img src="{{ product.featured_image | image_url: width: 720 }}" alt="{{ product.title | escape }}" loading="lazy">
+              {% else %}
+                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#7EC88A" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+              {% endif %}
+            </div>
+            <div class="th-pcard-info">
+              <div class="th-pcard-type">{{ product.type | default: 'Kit' }}</div>
+              <div class="th-pcard-title">{{ product.title }}</div>
+              <div class="th-pcard-price">{{ product.price | money }}</div>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="th-grid-empty">{{ section.settings.kits_empty_text }}</div>
+    {% endif %}
+  </section>
+
+  {%- comment -%} =================== SPLIT ROWS =================== {%- endcomment -%}
+  <section class="th-split">
+    <div class="th-split-row" data-th-reveal>
+      <div class="th-split-media">
+        {% if section.settings.split_1_image != blank %}
+          <img src="{{ section.settings.split_1_image | image_url: width: 1200 }}" alt="{{ section.settings.split_1_heading | escape }}" loading="lazy">
+        {% else %}
+          <svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        {% endif %}
+      </div>
+      <div class="th-split-content">
+        <div class="th-eyebrow-line">{{ section.settings.split_1_eyebrow }}</div>
+        <h2>{{ section.settings.split_1_heading }}</h2>
+        <p>{{ section.settings.split_1_paragraph }}</p>
+        {% if section.settings.split_1_button_label != blank %}<a class="th-btn" href="{{ section.settings.split_1_button_url }}">{{ section.settings.split_1_button_label }}</a>{% endif %}
+      </div>
+    </div>
+    <div class="th-split-row" data-th-reveal>
+      <div class="th-split-media">
+        {% if section.settings.split_2_image != blank %}
+          <img src="{{ section.settings.split_2_image | image_url: width: 1200 }}" alt="{{ section.settings.split_2_heading | escape }}" loading="lazy">
+        {% else %}
+          <svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M12 2l3 7h7l-5.5 4 2 7-6.5-4.5L5.5 20l2-7L2 9h7z"/></svg>
+        {% endif %}
+      </div>
+      <div class="th-split-content">
+        <div class="th-eyebrow-line">{{ section.settings.split_2_eyebrow }}</div>
+        <h2>{{ section.settings.split_2_heading }}</h2>
+        <p>{{ section.settings.split_2_paragraph }}</p>
+        {% if section.settings.split_2_button_label != blank %}<a class="th-btn" href="{{ section.settings.split_2_button_url }}">{{ section.settings.split_2_button_label }}</a>{% endif %}
+      </div>
+    </div>
+  </section>
+
+  {%- comment -%} =================== PRICING =================== {%- endcomment -%}
+  {% assign tiers = section.blocks | where: 'type', 'pricing_tier' %}
+  <section class="th-pricing">
+    <h2>{{ section.settings.pricing_heading }}</h2>
+    <div class="th-plans">
+      {% for block in tiers %}
+        <div class="th-plan {% if block.settings.featured %}th-featured{% endif %}" data-th-stagger style="transition-delay: {{ forloop.index0 | times: 0.1 }}s" {{ block.shopify_attributes }}>
+          {% if block.settings.featured %}<span class="th-plan-badge">{{ section.settings.pricing_badge_label }}</span>{% endif %}
+          <div class="th-plan-tier">{{ block.settings.tier }}</div>
+          <div class="th-plan-price">{{ block.settings.price }}</div>
+          <ul class="th-plan-features">
+            {% assign feature_lines = block.settings.features | newline_to_br | split: '<br />' %}
+            {% for line in feature_lines %}{% if line != blank %}<li>{{ line | strip }}</li>{% endif %}{% endfor %}
+          </ul>
+          <a class="th-plan-cta" href="{{ block.settings.button_url }}">{{ block.settings.button_label }}</a>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  {%- comment -%} =================== NEWSLETTER =================== {%- endcomment -%}
+  <section class="th-news">
+    <div class="th-news-inner">
+      <h2>{{ section.settings.newsletter_heading }}</h2>
+      <p>{{ section.settings.newsletter_subtext }}</p>
+      {% form 'customer', class: 'th-news-form' %}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        <input type="email" name="contact[email]" placeholder="you@brand.com" required aria-label="Email">
+        <button type="submit">{{ section.settings.newsletter_button_label }}</button>
+      {% endform %}
+    </div>
+  </section>
+
+  {%- comment -%} =================== TESTIMONIALS =================== {%- endcomment -%}
+  {% assign tests = section.blocks | where: 'type', 'testimonial' %}
+  <section class="th-testimonials">
+    <h2>{{ section.settings.testimonials_heading }}</h2>
+    <div class="th-test-grid">
+      {% for block in tests %}
+        <div class="th-test" data-th-stagger style="transition-delay: {{ forloop.index0 | times: 0.1 }}s" {{ block.shopify_attributes }}>
+          <div class="th-stars" aria-label="5 stars">
+            {% for i in (1..5) %}<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 16.8 5.8 21.3l2.4-7.4L2 9.4h7.6z"/></svg>{% endfor %}
+          </div>
+          <p class="th-quote">"{{ block.settings.quote }}"</p>
+          <div class="th-author">— {{ block.settings.author }}</div>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  {%- comment -%} =================== PROMOS =================== {%- endcomment -%}
+  {% assign promos = section.blocks | where: 'type', 'promo_banner' %}
+  <section class="th-promos">
+    <div class="th-promo-grid">
+      {% for block in promos %}
+        <a class="th-promo" href="{{ block.settings.link_url }}" {{ block.shopify_attributes }}>
+          <div class="th-promo-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+          <div class="th-promo-label">{{ block.settings.subtitle }}</div>
+          <h3>{{ block.settings.title }}</h3>
+          <span class="th-promo-link">{{ block.settings.link_label }} <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></span>
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+
+  {%- comment -%} =================== FOOTER =================== {%- endcomment -%}
+  <footer class="th-footer">
+    <div class="th-footer-wrap">
+      <div class="th-fcol">
+        <a href="/" class="th-flogo"><span class="ft">Tool</span><span class="fh">Haus</span></a>
+        <p>{{ section.settings.footer_tagline }}</p>
+        <div class="th-socials">
+          {% if section.settings.instagram_url != blank %}<a href="{{ section.settings.instagram_url }}" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>{% endif %}
+          {% if section.settings.facebook_url != blank %}<a href="{{ section.settings.facebook_url }}" aria-label="Facebook"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>{% endif %}
+          {% if section.settings.youtube_url != blank %}<a href="{{ section.settings.youtube_url }}" aria-label="YouTube"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg></a>{% endif %}
+          {% if section.settings.tiktok_url != blank %}<a href="{{ section.settings.tiktok_url }}" aria-label="TikTok"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V8.69a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.84-.12z"/></svg></a>{% endif %}
+        </div>
+      </div>
+      <div class="th-fcol">
+        <h4>{{ section.settings.legal_col_title }}</h4>
+        <ul>{% for link in linklists[section.settings.legal_menu].links %}<li><a href="{{ link.url }}">{{ link.title }}</a></li>{% endfor %}</ul>
+      </div>
+      <div class="th-fcol">
+        <h4>{{ section.settings.products_col_title }}</h4>
+        <ul>{% for link in linklists[section.settings.products_menu].links %}<li><a href="{{ link.url }}">{{ link.title }}</a></li>{% endfor %}</ul>
+      </div>
+      <div class="th-fcol">
+        <h4>{{ section.settings.main_col_title }}</h4>
+        <ul>{% for link in linklists[section.settings.main_menu].links %}<li><a href="{{ link.url }}">{{ link.title }}</a></li>{% endfor %}</ul>
+      </div>
+      <div class="th-fcol th-fnews">
+        <h4>{{ section.settings.newsletter_col_title }}</h4>
+        <p style="margin:0; font-size:14px;">{{ section.settings.newsletter_subtext }}</p>
+        {% form 'customer', class: 'th-newsletter-form' %}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <div style="display:flex;gap:8px;margin-top:14px;">
+            <input type="email" name="contact[email]" placeholder="you@brand.com" required aria-label="Email">
+            <button type="submit">{{ section.settings.newsletter_button_label }}</button>
+          </div>
+        {% endform %}
+      </div>
+    </div>
+    <div class="th-fbottom">
+      <div>{{ section.settings.footer_copyright }}</div>
+      <div class="th-payments">{{ shop.enabled_payment_types | payment_type_svg_tag: class: 'th-pay-icon' }}</div>
+    </div>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var root = document.getElementById('th-home-{{ section.id }}'); if(!root) return;
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ===== HERO SLIDER ===== */
+  var hero = root.querySelector('[data-th-hero]');
+  if(hero){
+    var slides = hero.querySelectorAll('.th-slide');
+    var dots = hero.querySelectorAll('[data-th-dot]');
+    var progress = hero.querySelector('[data-th-progress]');
+    var current = 0; var autoTimer = null; var progressTimer = null;
+    var duration = 5000;
+    function go(idx, dir){
+      if(slides.length === 0) return;
+      idx = (idx + slides.length) % slides.length;
+      if(idx === current) return;
+      slides[current].classList.remove('th-active');
+      slides[current].classList.add('th-prev');
+      var old = current;
+      setTimeout(function(){ slides[old].classList.remove('th-prev'); }, 1100);
+      current = idx;
+      slides[current].classList.add('th-active');
+      dots.forEach(function(d,i){ d.classList.toggle('th-active', i === current); });
+      resetProgress();
+    }
+    function next(){ go(current + 1, 'next'); }
+    function prev(){ go(current - 1, 'prev'); }
+    function resetProgress(){
+      if(!progress) return;
+      progress.style.transition = 'none';
+      progress.style.width = '0%';
+      if(reducedMotion) return;
+      void progress.offsetWidth;
+      progress.style.transition = 'width ' + duration + 'ms linear';
+      progress.style.width = '100%';
+    }
+    function startAuto(){ stopAuto(); resetProgress(); if(reducedMotion) return; autoTimer = setInterval(next, duration); }
+    function stopAuto(){ if(autoTimer){ clearInterval(autoTimer); autoTimer = null; } }
+
+    var arrowPrev = hero.querySelector('[data-th-arrow="prev"]');
+    var arrowNext = hero.querySelector('[data-th-arrow="next"]');
+    if(arrowPrev) arrowPrev.addEventListener('click', function(){ prev(); startAuto(); });
+    if(arrowNext) arrowNext.addEventListener('click', function(){ next(); startAuto(); });
+    dots.forEach(function(d, i){ d.addEventListener('click', function(){ go(i); startAuto(); }); });
+
+    /* Touch swipe */
+    var touchStartX = 0;
+    hero.addEventListener('touchstart', function(e){ touchStartX = e.touches[0].clientX; }, { passive: true });
+    hero.addEventListener('touchend', function(e){
+      var dx = e.changedTouches[0].clientX - touchStartX;
+      if(Math.abs(dx) > 50){ if(dx < 0) next(); else prev(); startAuto(); }
+    });
+
+    startAuto();
+  }
+
+  /* ===== PARTICLE CANVAS ===== */
+  var canvas = root.querySelector('[data-th-canvas]');
+  if(canvas && !reducedMotion){
+    var ctx = canvas.getContext('2d');
+    var particles = []; var N = 50;
+    function resize(){ canvas.width = canvas.offsetWidth * window.devicePixelRatio; canvas.height = canvas.offsetHeight * window.devicePixelRatio; ctx.scale(window.devicePixelRatio, window.devicePixelRatio); }
+    resize();
+    var w = function(){ return canvas.offsetWidth; };
+    var h = function(){ return canvas.offsetHeight; };
+    for(var i=0;i<N;i++){
+      particles.push({ x: Math.random()*w(), y: Math.random()*h(), vx: (Math.random()-0.5)*0.25, vy: (Math.random()-0.5)*0.25, r: Math.random()*1.8 + 0.8 });
+    }
+    function tick(){
+      ctx.clearRect(0,0,w(),h());
+      ctx.fillStyle = 'rgba(126,200,138,0.55)';
+      for(var i=0;i<particles.length;i++){
+        var p = particles[i];
+        p.x += p.vx; p.y += p.vy;
+        if(p.x < 0 || p.x > w()) p.vx *= -1;
+        if(p.y < 0 || p.y > h()) p.vy *= -1;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
+      }
+      ctx.strokeStyle = 'rgba(126,200,138,0.12)';
+      ctx.lineWidth = 1;
+      for(var i=0;i<particles.length;i++){
+        for(var j=i+1;j<particles.length;j++){
+          var a = particles[i], b = particles[j];
+          var dx = a.x-b.x, dy = a.y-b.y; var d = Math.sqrt(dx*dx+dy*dy);
+          if(d < 130){
+            ctx.globalAlpha = 1 - d/130;
+            ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+          }
+        }
+      }
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(tick);
+    }
+    tick();
+    window.addEventListener('resize', function(){ resize(); });
+  }
+
+  /* ===== SCROLL REVEAL ===== */
+  var revealEls = root.querySelectorAll('[data-th-reveal]');
+  if('IntersectionObserver' in window && !reducedMotion){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('th-visible'); io.unobserve(en.target); } });
+    }, { threshold: 0.15 });
+    revealEls.forEach(function(el){ io.observe(el); });
+  } else {
+    revealEls.forEach(function(el){ el.classList.add('th-visible'); });
+  }
+
+  /* ===== STAGGER GRID ===== */
+  var staggerEls = root.querySelectorAll('[data-th-stagger]');
+  if('IntersectionObserver' in window && !reducedMotion){
+    var sio = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('th-visible'); sio.unobserve(en.target); } });
+    }, { threshold: 0.1 });
+    staggerEls.forEach(function(el){ sio.observe(el); });
+  } else {
+    staggerEls.forEach(function(el){ el.classList.add('th-visible'); });
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Tool Haus Homepage",
+  "tag": "section",
+  "classes": "th-homepage-section",
+  "settings": [
+    { "type": "header", "content": "About section" },
+    { "type": "text", "id": "about_eyebrow", "label": "About eyebrow", "default": "About Tool Haus" },
+    { "type": "text", "id": "about_heading", "label": "About heading", "default": "We build the tools modern stores run on." },
+    { "type": "textarea", "id": "about_paragraph", "label": "About paragraph", "default": "Tool Haus is a premium studio building high-converting Shopify themes, digital kits, and growth packages for ambitious ecommerce brands." },
+    { "type": "text", "id": "about_button_label", "label": "About button label", "default": "Meet the studio" },
+    { "type": "url", "id": "about_button_url", "label": "About button URL" },
+    { "type": "text", "id": "about_stat_1_number", "label": "Stat 1 number", "default": "250+" },
+    { "type": "text", "id": "about_stat_1_label", "label": "Stat 1 label", "default": "Stores launched" },
+    { "type": "text", "id": "about_stat_2_number", "label": "Stat 2 number", "default": "98%" },
+    { "type": "text", "id": "about_stat_2_label", "label": "Stat 2 label", "default": "Client retention" },
+    { "type": "text", "id": "about_stat_3_number", "label": "Stat 3 number", "default": "12M+" },
+    { "type": "text", "id": "about_stat_3_label", "label": "Stat 3 label", "default": "Revenue generated" },
+    { "type": "text", "id": "about_stat_4_number", "label": "Stat 4 number", "default": "4.9★" },
+    { "type": "text", "id": "about_stat_4_label", "label": "Stat 4 label", "default": "Average rating" },
+    { "type": "header", "content": "Digital kits grid" },
+    { "type": "text", "id": "kits_heading", "label": "Kits section heading", "default": "Digital Kits" },
+    { "type": "collection", "id": "kits_collection_handle", "label": "Kits collection" },
+    { "type": "text", "id": "kits_link_label", "label": "View all link label", "default": "View all →" },
+    { "type": "text", "id": "kits_empty_text", "label": "Empty state text", "default": "No kits yet. Check back soon." },
+    { "type": "header", "content": "Split row 1" },
+    { "type": "image_picker", "id": "split_1_image", "label": "Split row 1 image" },
+    { "type": "text", "id": "split_1_eyebrow", "label": "Split row 1 eyebrow", "default": "Premium Kits" },
+    { "type": "text", "id": "split_1_heading", "label": "Split row 1 heading", "default": "Launch-ready digital kits built by experts." },
+    { "type": "textarea", "id": "split_1_paragraph", "label": "Split row 1 paragraph" },
+    { "type": "text", "id": "split_1_button_label", "label": "Split row 1 button label", "default": "Browse kits" },
+    { "type": "url", "id": "split_1_button_url", "label": "Split row 1 button URL" },
+    { "type": "header", "content": "Split row 2" },
+    { "type": "image_picker", "id": "split_2_image", "label": "Split row 2 image" },
+    { "type": "text", "id": "split_2_eyebrow", "label": "Split row 2 eyebrow", "default": "Done-For-You" },
+    { "type": "text", "id": "split_2_heading", "label": "Split row 2 heading", "default": "Themes and packages, installed and tuned." },
+    { "type": "textarea", "id": "split_2_paragraph", "label": "Split row 2 paragraph" },
+    { "type": "text", "id": "split_2_button_label", "label": "Split row 2 button label", "default": "See packages" },
+    { "type": "url", "id": "split_2_button_url", "label": "Split row 2 button URL" },
+    { "type": "header", "content": "Pricing" },
+    { "type": "text", "id": "pricing_heading", "label": "Pricing heading", "default": "Theme Packages" },
+    { "type": "text", "id": "pricing_badge_label", "label": "Featured badge label", "default": "Most Popular" },
+    { "type": "header", "content": "Newsletter bar" },
+    { "type": "text", "id": "newsletter_heading", "label": "Newsletter heading", "default": "Get the Tool Haus drop." },
+    { "type": "textarea", "id": "newsletter_subtext", "label": "Newsletter subtext", "default": "New kits, free resources, and growth guides. One email a month. No spam." },
+    { "type": "text", "id": "newsletter_button_label", "label": "Newsletter button label", "default": "Subscribe" },
+    { "type": "header", "content": "Testimonials" },
+    { "type": "text", "id": "testimonials_heading", "label": "Testimonials heading", "default": "What clients say" },
+    { "type": "header", "content": "Footer" },
+    { "type": "text", "id": "footer_tagline", "label": "Footer tagline", "default": "Everything your store needs to grow." },
+    { "type": "text", "id": "footer_copyright", "label": "Copyright text", "default": "© 2026 Tool Haus. All rights reserved." },
+    { "type": "url", "id": "instagram_url", "label": "Instagram URL" },
+    { "type": "url", "id": "facebook_url", "label": "Facebook URL" },
+    { "type": "url", "id": "youtube_url", "label": "YouTube URL" },
+    { "type": "url", "id": "tiktok_url", "label": "TikTok URL" },
+    { "type": "text", "id": "legal_col_title", "label": "Legal column title", "default": "Legal" },
+    { "type": "link_list", "id": "legal_menu", "label": "Legal menu" },
+    { "type": "text", "id": "products_col_title", "label": "Products column title", "default": "Products" },
+    { "type": "link_list", "id": "products_menu", "label": "Products menu" },
+    { "type": "text", "id": "main_col_title", "label": "Main column title", "default": "Company" },
+    { "type": "link_list", "id": "main_menu", "label": "Main menu" },
+    { "type": "text", "id": "newsletter_col_title", "label": "Newsletter column title", "default": "Newsletter" }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Hero slide",
+      "settings": [
+        { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Premium Shopify Themes" },
+        { "type": "textarea", "id": "heading", "label": "Heading", "default": "Built to sell. Designed to scale." },
+        { "type": "text", "id": "button_label", "label": "Button label", "default": "Explore themes" },
+        { "type": "url", "id": "button_url", "label": "Button URL" }
+      ]
+    },
+    {
+      "type": "trust_item",
+      "name": "Trust item",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Shopify Experts" }
+      ]
+    },
+    {
+      "type": "pricing_tier",
+      "name": "Pricing tier",
+      "settings": [
+        { "type": "text", "id": "tier", "label": "Tier label", "default": "Basic" },
+        { "type": "text", "id": "price", "label": "Price", "default": "$49" },
+        { "type": "textarea", "id": "features", "label": "Features (one per line)", "default": "Feature one\nFeature two\nFeature three" },
+        { "type": "text", "id": "button_label", "label": "Button label", "default": "Get started" },
+        { "type": "url", "id": "button_url", "label": "Button URL" },
+        { "type": "checkbox", "id": "featured", "label": "Mark as featured", "default": false }
+      ]
+    },
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        { "type": "textarea", "id": "quote", "label": "Quote", "default": "Tool Haus transformed our store." },
+        { "type": "text", "id": "author", "label": "Author", "default": "Name, Title" }
+      ]
+    },
+    {
+      "type": "promo_banner",
+      "name": "Promo banner",
+      "settings": [
+        { "type": "text", "id": "subtitle", "label": "Label / subtitle", "default": "Limited offer" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Promo title" },
+        { "type": "text", "id": "link_label", "label": "Link label", "default": "Shop now" },
+        { "type": "url", "id": "link_url", "label": "Link URL" }
+      ]
+    }
+  ],
+  "max_blocks": 30,
+  "presets": [
+    {
+      "name": "Tool Haus Homepage",
+      "blocks": [
+        { "type": "slide", "settings": { "eyebrow": "Premium Shopify Themes", "heading": "Built to sell. Designed to scale.", "button_label": "Explore themes" } },
+        { "type": "slide", "settings": { "eyebrow": "Digital Growth Kits", "heading": "Everything your store needs to grow.", "button_label": "Shop kits" } },
+        { "type": "slide", "settings": { "eyebrow": "Done-For-You Service", "heading": "Launch in days, not months.", "button_label": "Start a project" } },
+        { "type": "slide", "settings": { "eyebrow": "Expert Consultation", "heading": "Strategy, built by operators.", "button_label": "Book a call" } },
+        { "type": "trust_item", "settings": { "label": "Shopify Experts" } },
+        { "type": "trust_item", "settings": { "label": "Lifetime Updates" } },
+        { "type": "trust_item", "settings": { "label": "Expert Built" } },
+        { "type": "trust_item", "settings": { "label": "24/7 Support" } },
+        { "type": "trust_item", "settings": { "label": "Money-Back Guarantee" } },
+        { "type": "pricing_tier", "settings": { "tier": "Basic", "price": "$49", "features": "1 Digital Kit\nEmail Support\nBasic Docs\n1 Site License", "button_label": "Get Basic" } },
+        { "type": "pricing_tier", "settings": { "tier": "Standard", "price": "$149", "features": "3 Digital Kits\nPriority Support\nFull Docs\n3 Site Licenses\nInstallation Help", "button_label": "Get Standard", "featured": true } },
+        { "type": "pricing_tier", "settings": { "tier": "Premium", "price": "$399", "features": "Full Theme Package\nDedicated Support\nWhite-Glove Setup\nUnlimited Sites\nGrowth Audit", "button_label": "Get Premium" } },
+        { "type": "testimonial", "settings": { "quote": "Tool Haus transformed our store. Conversions doubled in the first month.", "author": "Maya R., Founder" } },
+        { "type": "testimonial", "settings": { "quote": "The digital kits paid for themselves in a week. Clean code, fast load times.", "author": "Daniel K., CMO" } },
+        { "type": "testimonial", "settings": { "quote": "We tried three agencies before Tool Haus. None came close.", "author": "Priya S., CEO" } },
+        { "type": "promo_banner", "settings": { "subtitle": "New arrivals", "title": "Fresh kits dropping every Friday.", "link_label": "Shop new" } },
+        { "type": "promo_banner", "settings": { "subtitle": "Custom builds", "title": "Need something bespoke? Let's talk.", "link_label": "Start project" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

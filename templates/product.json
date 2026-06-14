@@ -1,0 +1,16 @@
+{
+  "sections": {
+    "main": {
+      "type": "toolhaus-product",
+      "settings": {
+        "badge_1_label": "Instant Download",
+        "badge_2_label": "Expert Built",
+        "badge_3_label": "Shopify Ready",
+        "related_heading": "You may also like",
+        "description_label": "Full description",
+        "empty_image_label": "No image available"
+      }
+    }
+  },
+  "order": ["main"]
+}
